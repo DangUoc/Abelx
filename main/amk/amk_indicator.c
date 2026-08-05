@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file amk_indicator.c
  * @author astro
  * 
