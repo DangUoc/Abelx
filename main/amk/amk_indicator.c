@@ -27,7 +27,7 @@ void amk_indicator_init(void)
 #endif
 }
 
-void led_set(uint8_t led)
+__attribute__((weak)) void led_set(uint8_t led)
 {
 #ifdef CAPS_LED_PIN
     if (led & (1 << USB_LED_CAPS_LOCK)) {
