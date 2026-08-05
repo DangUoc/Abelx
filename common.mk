@@ -1,24 +1,17 @@
-# Command alias
+﻿# Command alias
 MK := mkdir -p
 RM := rm -rf
 CP := cp
 UF2 := python util/uf2conv.py
-VIAL := python util/vial_generate_definition.py
 
 # Build type
-NO_DEBUG ?= 1
+NO_DEBUG ?= 0
 LTO_ENABLE ?= 0
 
 # Echo suspend
 NO_ECHO := @
 
-# Toolchain Architecture
-ifneq (,$(filter $(strip $(MCU)),$(CH32V_MCUS)))
-GNU_PREFIX := riscv-none-embed
-else
 GNU_PREFIX := arm-none-eabi
-endif
-
 
 # Toolchain commands
 CC      := $(GNU_INSTALL_ROOT)$(GNU_PREFIX)-gcc
@@ -67,9 +60,9 @@ $(LIB_OBJ_DIRS):
 #$(info $(APP_DEFS))
 
 ifeq (1,$(NO_DEBUG))
-OPT += -Os -ggdb
+OPT = -Os -ggdb
 else
-OPT += -Og -ggdb3 -DDEBUG
+OPT = -Og -ggdb3 -DDEBUG
 endif
 
 ifeq (1,$(LTO_ENABLE))
@@ -79,7 +72,6 @@ endif
 COMMON_FLAGS := $(OPT) $(APP_DEFS) $(SDK_DEFS)
 # C flags common to all targets
 CFLAGS += $(COMMON_FLAGS)
-CFLAGS += -std=gnu11
 CFLAGS += -Wall
 CFLAGS += -Werror
 # keep every function in a separate section, this allows linker to discard unused ones
@@ -89,9 +81,6 @@ CFLAGS += -fno-strict-aliasing
 CFLAGS += -fno-builtin
 CFLAGS += -fshort-enums
 CFLAGS += -fms-extensions
-# do not use double
-CFLAGS += -fsingle-precision-constant
-CFLAGS += -Wdouble-promotion
 # C++ flags common to all targets
 CXXFLAGS += $(COMMON_FLAGS)
 
@@ -169,11 +158,6 @@ $(TARGET): $(DEP_LIBS)
 $(OUTPUT_DIR):
 	+$(MK) $(OUTPUT_DIR)
 
-ifeq (yes, $(strip $(VIAL_ENABLE)))
-$(KEYBOARD_DIR)/vial_generated_keyboard_definition.h: $(KEYBOARD_DIR)/vial.json
-	$(NO_ECHO)$(VIAL) $^ $@
-endif
-
 # Create lib files
 %.a: $(LIB_OBJS) | $(OUTPUT_DIR)
 	$(info Archiving: $(notdir $@))
@@ -206,3 +190,4 @@ endif
 
 # Include the dependency files
 -include $(OBJS:%.o=%.d)
+
