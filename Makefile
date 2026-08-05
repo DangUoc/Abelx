@@ -1,4 +1,8 @@
 ﻿
+MK := python -c "import os, sys; os.makedirs(sys.argv[1], exist_ok=True)"
+RM := python -c "import shutil, sys; [shutil.rmtree(p, ignore_errors=True) for p in sys.argv[1:]]"
+CP := python -c "import shutil, sys; shutil.copyfile(sys.argv[1], sys.argv[2])"
+
 PROJECT_NAME := amk
 NRF_MCUS := NRF52832 NRF52840
 STM32_MCUS := STM32F103 STM32F411 STM32F405 STM32F722 STM32L432 STM32L072 STM32F446
