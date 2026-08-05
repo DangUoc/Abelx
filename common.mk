@@ -1,7 +1,7 @@
-# Command alias
-MK := mkdir -p
-RM := rm -rf
-CP := cp
+﻿# Command alias
+MK := python -c "import os, sys; os.makedirs(sys.argv[1], exist_ok=True)"
+RM := python -c "import shutil, sys; [shutil.rmtree(p, ignore_errors=True) for p in sys.argv[1:]]"
+CP := python -c "import shutil, sys; shutil.copyfile(sys.argv[1], sys.argv[2])"
 UF2 := python util/uf2conv.py
 
 # Build type
@@ -33,14 +33,7 @@ OBJS += $(patsubst %.c,$(BUILD_DIR)/%.o,$(patsubst %.cpp,$(BUILD_DIR)/%.o,$(filt
 LIB_OBJS += $(patsubst %.s,$(BUILD_DIR)/%.o,$(patsubst %.S,$(BUILD_DIR)/%.o,$(filter %.s %.S,$(LIB_SRCS))))
 LIB_OBJS += $(patsubst %.c,$(BUILD_DIR)/%.o,$(patsubst %.cpp,$(BUILD_DIR)/%.o,$(filter-out %.s %.S,$(LIB_SRCS))))
 
-ifndef PROGRESS 
-T := $(shell $(MAKE) $(GOALS) --no-print-directory \
-      -nrRf $(firstword $(MAKEFILE_LIST)) \
-      PROGRESS="COUNTTHIS" | grep -c "COUNTTHIS")
-N := x
-C = $(words $N)$(eval N := x $N)
-PROGRESS = echo -n "[`expr $C '*' 100 / $T`%]"
-endif
+PROGRESS =
 
 # Create build directories
 OBJ_DIRS = $(sort $(dir $(OBJS)))
@@ -190,3 +183,4 @@ endif
 
 # Include the dependency files
 -include $(OBJS:%.o=%.d)
+
