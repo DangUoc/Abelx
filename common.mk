@@ -114,25 +114,22 @@ endif
 
 # Create object files from C source files
 $(BUILD_DIR)/%.o : %.c
-	@$(PROGRESS) Compiling: $(notdir $<)
-	$(NO_ECHO)$(CC) -c $(ALL_CFLAGS) $< -o $@ && $(RES_STR)
+	@echo Compiling: $(notdir $<)
+	$(NO_ECHO)$(CC) -c $(ALL_CFLAGS) $< -o $@
 
 # Create object files from C++ source files
 $(BUILD_DIR)/%.o : %.cpp
-	@$(PROGRESS) Compiling: $(notdir $<)
-	$(NO_ECHO)$(CC) -c $(ALL_CPPFLAGS) $< -o $@ && $(RES_STR)
+	@echo Compiling: $(notdir $<)
+	$(NO_ECHO)$(CC) -c $(ALL_CPPFLAGS) $< -o $@
 
 # Create object files from assembly source files
-define ASSEMBLING 
-	$(NO_ECHO)$(CC) -c $(ALL_ASMFLAGS) $< -o $@ && $(RES_STR)
-endef
 $(BUILD_DIR)/%.o : %.s
-	@$(PROGRESS) Assembling: $(notdir $<)
-	$(ASSEMBLING)
+	@echo Assembling: $(notdir $<)
+	$(NO_ECHO)$(CC) -c $(ALL_ASMFLAGS) $< -o $@
 
 $(BUILD_DIR)/%.o : %.S
-	@$(PROGRESS) Assembling: $(notdir $<)
-	$(ASSEMBLING)
+	@echo Assembling: $(notdir $<)
+	$(NO_ECHO)$(CC) -c $(ALL_ASMFLAGS) $< -o $@
 
 OUTPUT_FILES = $(addprefix $(OUTPUT_DIR)/$(TARGET), .elf .bin .hex)
 
@@ -183,4 +180,5 @@ endif
 
 # Include the dependency files
 -include $(OBJS:%.o=%.d)
+
 
